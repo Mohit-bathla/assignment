@@ -100,13 +100,32 @@ app.listen(port,function(err){
     csvModel.findOneAndReplace({date:prevDate ,description:prevDescription, amount:prevAmount, currency:prevCurrency},{date:newDate ,description:newDescription, amount:newAmount, currency:newCurrency},{ returnOriginal: false },function(err,data){
         if(err){
             console.log('error in edition',err);
-            res.redirect('back');
+            return res.redirect('back');
         }
         else{
             console.log("sup");
-            return res.render('edited');
+            res.render('edited');
         }
     });
+
+ })
+ app.post('/del',function(req,res){
+    var prevDate=req.body.Date;
+    var prevDescription=req.body.Description;
+    var prevAmount=req.body.Amount;
+    var prevCurrency=req.body.Currency;
+
+    csvModel.findOneAndDelete({ description: prevDescription, date: prevDate, amount: prevAmount, currency: prevCurrency }, function(err) {
+        if (err) {
+            console.log("Error in deletion",err);
+            res.redirect('back')
+        }
+        else {
+            return res.render('deleted')
+        }
+    });
+    //res.send("SEARCH COMPLETED");
+    //res.render('deleted.ejs');
 
  })
  app.get('/insertion',function(req,res){
