@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="text-align: center;">Here are the details</h1>
+    <%if(data){%>
+    <table style="text-align: center; border: 1px solid;">
+        <tr style="text-align: center;">
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Currency</th>
+        </tr>
+    <%for(var i=0;i< data.length;i++){%>
+        <tr style="text-align: center;">
+            <td >
+                <%= data[i].date%>
+            </td>
+            <td >
+                <%= data[i].description%>
+            </td>
+            <td >
+                <%= data[i].amount%>
+            </td>
+            <td >
+                <%= data[i].currency%>
+            </td>
+        </tr>
+    <%}%>
+    </table>
+
+    <%}%>
+</body>
+</html>

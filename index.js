@@ -60,9 +60,64 @@ app.post('/',uploads.single('csv'),function(req,res){
         });
     });
 })
+app.get("/details", function (req, res) {
+    csvModel.find({}, function (err,Details) {
+        if (err) {
+            console.log(err);
+            res.redirect('back');
+        } else {
+            res.render("details", { data:Details })
+        }
+    });
+});
 app.listen(port,function(err){
     if(err){
         console.log(`Error ${err}`);
     }
     console.log(`server is running on ${port}`)
- }); 
+ });
+ app.post('/insert',function(req,res){
+    const data = new csvModel({
+        date: req.body.Date,
+        description: req.body.Description,
+        amount: req.body.Amount,
+        currency: req.body.Currency
+    })
+    data.save();
+    return res.render('inserted')
+ })
+ app.post('/edit',function(req,res){
+    var prevDate=req.body.Date;
+    var prevDescription=req.body.Description;
+    var prevAmount=req.body.Amount;
+    var prevCurrency=req.body.Currency;
+
+    var newDate=req.body.Datenew;
+    var newDescription=req.body.Descriptionnew;
+    var newAmount=req.body.Amountnew;
+    var newCurrency=req.body.Currencynew;
+    
+    csvModel.findOneAndReplace({date:prevDate ,description:prevDescription, amount:prevAmount, currency:prevCurrency},{date:newDate ,description:newDescription, amount:newAmount, currency:newCurrency},{ returnOriginal: false },function(err,data){
+        if(err){
+            console.log('error in edition',err);
+            res.redirect('back');
+        }
+        else{
+            console.log("sup");
+            return res.render('edited');
+        }
+    });
+
+ })
+ app.get('/insertion',function(req,res){
+    res.render('insertion');
+
+ })
+ app.get('/deletion',function(req,res){
+    res.render('deletion');
+
+ })
+ app.get('/edition',function(req,res){
+    res.render('edition');
+
+ })
