@@ -3,6 +3,7 @@ const express=require('express');
 const app=express();
 const port=8000;
 //databse connection
+const fileController=require('./controllers/file_controller');
 const db=require('./config/mongoose.js');
 const path = require('path');
 const multer=require('multer');
@@ -60,74 +61,10 @@ app.post('/',uploads.single('csv'),function(req,res){
         });
     });
 })
-app.get("/details", function (req, res) {
-    csvModel.find({}, function (err,Details) {
-        if (err) {
-            console.log(err);
-            res.redirect('back');
-        } else {
-            res.render("details", { data:Details })
-        }
-    });
-});
-app.listen(port,function(err){
-    if(err){
-        console.log(`Error ${err}`);
-    }
-    console.log(`server is running on ${port}`)
- });
- app.post('/insert',function(req,res){
-    const data = new csvModel({
-        date: req.body.Date,
-        description: req.body.Description,
-        amount: req.body.Amount,
-        currency: req.body.Currency
-    })
-    data.save();
-    return res.render('inserted')
- })
- app.post('/edit',function(req,res){
-    var prevDate=req.body.Date;
-    var prevDescription=req.body.Description;
-    var prevAmount=req.body.Amount;
-    var prevCurrency=req.body.Currency;
-
-    var newDate=req.body.Datenew;
-    var newDescription=req.body.Descriptionnew;
-    var newAmount=req.body.Amountnew;
-    var newCurrency=req.body.Currencynew;
-    
-    csvModel.findOneAndReplace({date:prevDate ,description:prevDescription, amount:prevAmount, currency:prevCurrency},{date:newDate ,description:newDescription, amount:newAmount, currency:newCurrency},{ returnOriginal: false },function(err,data){
-        if(err){
-            console.log('error in edition',err);
-            return res.redirect('back');
-        }
-        else{
-            console.log("sup");
-            res.render('edited');
-        }
-    });
-
- })
- app.post('/del',function(req,res){
-    var prevDate=req.body.Date;
-    var prevDescription=req.body.Description;
-    var prevAmount=req.body.Amount;
-    var prevCurrency=req.body.Currency;
-
-    csvModel.findOneAndDelete({ description: prevDescription, date: prevDate, amount: prevAmount, currency: prevCurrency }, function(err) {
-        if (err) {
-            console.log("Error in deletion",err);
-            res.redirect('back')
-        }
-        else {
-            return res.render('deleted')
-        }
-    });
-    //res.send("SEARCH COMPLETED");
-    //res.render('deleted.ejs');
-
- })
+ app.get("/details", fileController.details);
+ app.post('/insert',fileController.insert);
+ app.post('/edit',fileController.edit);
+ app.post('/del',fileController.del);
  app.get('/insertion',function(req,res){
     res.render('insertion');
 
@@ -140,3 +77,9 @@ app.listen(port,function(err){
     res.render('edition');
 
  })
+ app.listen(port,function(err){
+    if(err){
+        console.log(`Error ${err}`);
+    }
+    console.log(`server is running on ${port}`)
+ });
