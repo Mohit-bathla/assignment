@@ -1,7 +1,7 @@
 const mongoose=require('mongoose');
 const csvSchema = new mongoose.Schema({  
     date:{  
-        type:String  
+        type:Date 
     },  
     description:{  
         type:String  
@@ -11,6 +11,9 @@ const csvSchema = new mongoose.Schema({
     },  
     currency:{  
         type:String 
-    } 
+    }, 
+    // inr:{
+    //     type:String
+    // }
 });
 module.exports = mongoose.model('expenses',csvSchema); 

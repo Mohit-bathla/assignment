@@ -38,7 +38,6 @@ module.exports.insert=function(req,res){
             return res.redirect('back');
         }
         else{
-            console.log("sup");
             res.render('edited');
         }
     });

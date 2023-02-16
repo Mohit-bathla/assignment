@@ -21,10 +21,17 @@ let storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
       //const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.fieldname + '-' + Date.now()); 
+      cb(null, file.originalname); 
     }
 })
 const uploads = multer({ storage: storage });
+
+var converter=function(date){
+    var parts=date.split('-');
+    var myDate=new Date((parts[2])+'-'+(parts[1])+'-'+(parts[0]));
+    return myDate;
+}
+
 //initiate page
 app.get('/',function(req,res){
     csvModel.find({},function(err,data){
@@ -38,12 +45,14 @@ app.get('/',function(req,res){
     })
 })
 //post --user uploads a file and that is stored
-var userData=[];
+
 app.post('/',uploads.single('csv'),function(req,res){
     csv().fromFile(req.file.path).then(function(jsonObject){
+    
+        var userData=[];
         for(var x=0;x<jsonObject.length;x++){
             userData.push({
-                date:jsonObject[x].Date,
+                date:converter(jsonObject[x].Date),
                 description:jsonObject[x].Description,
                 amount:jsonObject[x].Amount,
                 currency:jsonObject[x].Currency
@@ -51,7 +60,7 @@ app.post('/',uploads.single('csv'),function(req,res){
             })
 
         }
-        console.log(userData[0]);
+     
         csvModel.insertMany(userData, function(err, data){
             if (err) {
                 console.log("error in uploading",err);
