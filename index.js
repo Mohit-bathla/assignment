@@ -4,6 +4,7 @@ const app=express();
 const port=8000;
 //databse connection
 const fileController=require('./controllers/file_controller');
+const homeController=require('./controllers/home_controller');
 const db=require('./config/mongoose.js');
 const path = require('path');
 const multer=require('multer');
@@ -33,62 +34,28 @@ var converter=function(date){
 }
 
 //initiate page
-app.get('/',function(req,res){
-    csvModel.find({},function(err,data){
-        if(err){
-            console.log("error in loading page",err);
-            return;
-        }
-        
-        res.render('index',{data:data});
-        
-    })
-})
+app.get('/',homeController.homepage)
 //post --user uploads a file and that is stored
+app.post('/',uploads.single('csv'),homeController.csvUpload);
+app.get("/details", fileController.details);
+app.post('/insert',fileController.insert);
+app.post('/edit',fileController.edit);
+app.post('/del',fileController.del);
+app.get('/insertion',function(req,res){
+res.render('insertion');
 
-app.post('/',uploads.single('csv'),function(req,res){
-    csv().fromFile(req.file.path).then(function(jsonObject){
-    
-        var userData=[];
-        for(var x=0;x<jsonObject.length;x++){
-            userData.push({
-                date:converter(jsonObject[x].Date),
-                description:jsonObject[x].Description,
-                amount:jsonObject[x].Amount,
-                currency:jsonObject[x].Currency
-
-            })
-
-        }
-     
-        csvModel.insertMany(userData, function(err, data){
-            if (err) {
-                console.log("error in uploading",err);
-            } else {
-                res.redirect('/');
-            }
-        });
-    });
 })
- app.get("/details", fileController.details);
- app.post('/insert',fileController.insert);
- app.post('/edit',fileController.edit);
- app.post('/del',fileController.del);
- app.get('/insertion',function(req,res){
-    res.render('insertion');
+app.get('/deletion',function(req,res){
+res.render('deletion');
 
- })
- app.get('/deletion',function(req,res){
-    res.render('deletion');
+})
+app.get('/edition',function(req,res){
+res.render('edition');
 
- })
- app.get('/edition',function(req,res){
-    res.render('edition');
-
- })
- app.listen(port,function(err){
-    if(err){
-        console.log(`Error ${err}`);
-    }
-    console.log(`server is running on ${port}`)
- });
+})
+app.listen(port,function(err){
+if(err){
+    console.log(`Error ${err}`);
+}
+console.log(`server is running on ${port}`)
+});
