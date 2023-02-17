@@ -9,10 +9,15 @@
 -To try running the program install npm and then install following using npm
 
   express                      "npm install express"
+  
   mongoose                     "npm install mongoose"
+  
   multer                       "npm install multer"
+  
   csvToJson                    "npm install csvToJson"
+  
   body-parser                  "npm install body-parser"
+  
   ejs                          "npm install ejs"
   
   
