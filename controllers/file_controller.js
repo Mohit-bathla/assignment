@@ -24,6 +24,8 @@ async function usdToInr(amount,date){
     let responseJson = await response.json()
     let inrValue = responseJson.result;
 
+    //console.log(inrValue);
+
     return inrValue;
 
 }
@@ -38,15 +40,17 @@ module.exports.details=function (req, res) {
             res.render("details", { data:Details })
         }
     });
-    usdToInr('10','2002-01-04')
+    
 }
-module.exports.insert=function(req,res){
+module.exports.insert=async function(req,res){
     const data = new csvModel({
         date: req.body.Date,
         description: req.body.Description,
         amount: req.body.Amount,
-        currency: req.body.Currency
+        currency: req.body.Currency,
+        inr:await usdToInr(req.body.Amount,dateToString(req.body.Date))
     })
+
     data.save();
     return res.render('inserted')
  }
