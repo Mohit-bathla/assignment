@@ -12,8 +12,8 @@ const csvSchema = new mongoose.Schema({
     currency:{  
         type:String 
     }, 
-    // inr:{
-    //     type:String
-    // }
+    inr:{
+        type:String
+    }
 });
 module.exports = mongoose.model('expenses',csvSchema); 

@@ -1,7 +1,35 @@
 const csvModel = require('../models/expenses');
 const path = require('path');
 
+function dateToString(date){
+    var d = new Date(date);
+    stringDate = [
+        d.getFullYear(),
+        ('0' + (d.getMonth() + 1)).slice(-2),
+        ('0' + d.getDate()).slice(-2)
+    ].join('-');
+    return stringDate;
+}
+async function usdToInr(amount,date){
+    var myHeaders = new Headers();
+    myHeaders.append("apikey", "QtRRUHOWwBU1NTNpm6jAd2rR990V6gyx");
+
+    var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    headers: myHeaders
+    };
+
+    let response=await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=inr&from=usd&amount=${amount}&date=${date}`, requestOptions)
+    let responseJson = await response.json()
+    let inrValue = responseJson.result;
+
+    return inrValue;
+
+}
+
 module.exports.details=function (req, res) {
+    
     csvModel.find({}, function (err,Details) {
         if (err) {
             console.log(err);
@@ -10,6 +38,7 @@ module.exports.details=function (req, res) {
             res.render("details", { data:Details })
         }
     });
+    usdToInr('10','2002-01-04')
 }
 module.exports.insert=function(req,res){
     const data = new csvModel({

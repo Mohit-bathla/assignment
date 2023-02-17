@@ -15,6 +15,7 @@
             <th>Description</th>
             <th>Amount</th>
             <th>Currency</th>
+            <th>INR</th>
         </tr>
     <%for(var i=0;i< data.length;i++){%>
         <tr style="text-align: center;">
@@ -29,6 +30,9 @@
             </td>
             <td >
                 <%= data[i].currency%>
+            </td>
+            <td>
+                <%= data[i].inr%>
             </td>
         </tr>
     <%}%>

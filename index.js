@@ -2,7 +2,7 @@ const express=require('express');
 //app init 
 const app=express();
 const port=8000;
-//databse connection
+//database connection
 const fileController=require('./controllers/file_controller');
 const homeController=require('./controllers/home_controller');
 const db=require('./config/mongoose.js');
@@ -26,12 +26,6 @@ let storage = multer.diskStorage({
     }
 })
 const uploads = multer({ storage: storage });
-
-var converter=function(date){
-    var parts=date.split('-');
-    var myDate=new Date((parts[2])+'-'+(parts[1])+'-'+(parts[0]));
-    return myDate;
-}
 
 //initiate page
 app.get('/',homeController.homepage)
